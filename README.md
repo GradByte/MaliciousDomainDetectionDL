@@ -23,7 +23,7 @@ This project implements a hybrid CNN-LSTM neural network to classify domains int
 - **Attention Mechanism**: Focuses on most important features
 - **Class Imbalance Handling**: Weighted loss and sampling strategies
 - **Comprehensive Evaluation**: Accuracy, precision, recall, F1-score, ROC-AUC, confusion matrix
-- **Mixed Precision Training**: Faster training with FP16
+- **GPU Acceleration**: Optimized for CUDA-enabled GPUs
 
 ## Project Structure
 
@@ -52,17 +52,12 @@ dnsProject/
 
 ## Installation
 
-1. **Clone or navigate to the project directory:**
-```bash
-cd /home/vigi/Documents/dnsProject
-```
-
-2. **Install dependencies:**
+1. **Install dependencies:**
 ```bash
 pip install -r requirements.txt
 ```
 
-3. **Verify dataset:**
+2. **Verify dataset:**
 Ensure the Zenodo dataset files are in the `Zenodo/` directory:
 - `phishing.json` (~2.1GB)
 - `malware.json` (~1.0GB)
@@ -149,12 +144,12 @@ Dense (64) + ReLU + Dropout
 Output (3 classes, softmax)
 ```
 
-## Expected Performance
+## Performance
 
-Based on DNS feature richness and dataset quality:
-- **Target Accuracy**: 95%+
-- **Training Time**: 6-12 hours on GPU (depends on sample size)
-- **Inference Speed**: <10ms per domain
+The model is designed to achieve high accuracy through:
+- Rich DNS feature extraction (50+ features)
+- Hybrid CNN-LSTM architecture with attention
+- Comprehensive training on large-scale dataset
 
 ## Results
 
@@ -204,11 +199,10 @@ Each record includes comprehensive DNS information:
 
 ## Tips for Training
 
-1. **Start Small**: Begin with 1-2M samples to verify the pipeline
+1. **Start Small**: Begin with smaller samples to verify the pipeline
 2. **Monitor GPU Memory**: Adjust `batch_size` if you encounter OOM errors
-3. **Use Mixed Precision**: Enabled by default for faster training
-4. **Class Imbalance**: The `weighted` strategy works well for this dataset
-5. **Early Stopping**: Prevents overfitting with patience=10 epochs
+3. **Class Imbalance**: The `weighted` strategy works well for this dataset
+4. **Early Stopping**: Prevents overfitting
 
 ## Troubleshooting
 

@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Python 3.8 or higher (tested with Python 3.14.2)
+- Python 3.8 or higher
 - pip package manager
 - CUDA-compatible GPU (optional but recommended for training)
 
@@ -13,8 +13,6 @@
 First, install the required Python packages:
 
 ```bash
-cd /home/vigi/Documents/dnsProject
-
 # Install NumPy, Pandas, and scikit-learn
 pip install numpy pandas scikit-learn
 
@@ -29,7 +27,7 @@ pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu11
 pip install ijson pyyaml matplotlib seaborn scipy tqdm
 ```
 
-Alternatively, install all at once from requirements.txt (after TensorFlow compatibility is resolved):
+Alternatively, install all at once from requirements.txt:
 ```bash
 pip install -r requirements.txt
 ```
@@ -62,7 +60,7 @@ This will:
 - Test data loading from large JSON files
 - Verify feature extraction works correctly
 - Test preprocessing pipeline
-- Check TensorFlow availability
+- Check PyTorch availability
 - Verify evaluation utilities
 
 ### 4. Quick Test Training
@@ -77,7 +75,6 @@ The test configuration (`config_test.yaml`) uses:
 - **100,000 total samples** (50K benign, 30K phishing, 20K malware)
 - **Smaller model** architecture for faster training
 - **10 epochs** with early stopping
-- **~10-30 minutes** training time on GPU
 
 ### 5. Full Training
 
@@ -91,7 +88,6 @@ The full configuration uses:
 - **10 million samples** (5M benign, 3M phishing, 2M malware)
 - **Full model** architecture
 - **50 epochs** with early stopping
-- **6-12 hours** training time on GPU
 
 ## Monitoring Training
 
@@ -125,8 +121,8 @@ ls -lh results/experiment_*/
 ```
 
 Key files:
-- `best_model.h5` - Best model checkpoint
-- `final_model.h5` - Final trained model
+- `best_model.pt` - Best model checkpoint
+- `final_model.pt` - Final trained model
 - `test_metrics.json` - Performance metrics
 - `classification_report.txt` - Detailed report
 - `confusion_matrix.png` - Confusion matrix
@@ -145,7 +141,7 @@ python predict.py
 python predict.py --input domains.json --output predictions.json
 
 # Custom model path
-python predict.py --model results/experiment_XXX/best_model.h5
+python predict.py --model results/experiment_XXX/best_model.pt
 ```
 
 ## Troubleshooting
@@ -232,10 +228,9 @@ python train.py --config config_test.yaml
 
 ### For Faster Training
 
-1. **Use GPU**: 10-20x faster than CPU
-2. **Enable mixed precision**: Enabled by default in config.yaml
-3. **Increase batch size**: If you have enough GPU memory
-4. **Use fewer samples**: Start with 1M samples for experimentation
+1. **Use GPU**: Significantly faster than CPU
+2. **Increase batch size**: If you have enough GPU memory
+3. **Use fewer samples**: Start with 1M samples for experimentation
 
 ### For Better Accuracy
 
@@ -259,7 +254,7 @@ python train.py --config config_test.yaml
 For issues or questions:
 1. Check this guide and README.md
 2. Review error messages in console output
-3. Check TensorFlow and CUDA compatibility
+3. Check PyTorch and CUDA compatibility
 4. Verify dataset integrity
 
 ## Dataset Citation

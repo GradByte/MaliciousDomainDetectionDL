@@ -4,10 +4,9 @@ Get your malicious domain detection model up and running in minutes!
 
 ## 🚀 Fast Track (3 Steps)
 
-### 1. Install Dependencies (~2 minutes)
+### 1. Install Dependencies
 
 ```bash
-cd /home/vigi/Documents/dnsProject
 pip install numpy pandas scikit-learn torch torchvision ijson pyyaml matplotlib seaborn scipy tqdm
 ```
 
@@ -16,7 +15,7 @@ Or install from requirements.txt:
 pip install -r requirements.txt
 ```
 
-### 2. Verify Setup (~30 seconds)
+### 2. Verify Setup
 
 ```bash
 python test_setup.py
@@ -24,14 +23,14 @@ python test_setup.py
 
 Expected output: All tests should pass ✅
 
-### 3. Start Training (~15 minutes for test, 6-12 hours for full)
+### 3. Start Training
 
-**Quick Test** (100K samples, ~15 minutes):
+**Quick Test** (100K samples):
 ```bash
 python train.py --config config_test.yaml
 ```
 
-**Full Training** (10M samples, ~6-12 hours):
+**Full Training** (10M samples):
 ```bash
 python train.py --config config.yaml
 ```
@@ -43,19 +42,14 @@ python train.py --config config.yaml
 After training completes, you'll find in `results/experiment_TIMESTAMP/`:
 
 ```
-📁 results/experiment_20260209_143022/
+📁 results/experiment_TIMESTAMP/
 ├── 🎯 best_model.pt              # Your trained model (PyTorch)
-├── 📈 test_metrics.json          # Performance: accuracy, F1, etc.
+├── 📈 test_metrics.json          # Performance metrics
 ├── 📊 confusion_matrix.png       # Visual performance
 ├── 📉 roc_curves.png             # ROC curves
 ├── 📝 classification_report.txt  # Detailed metrics
 └── 📊 training_history.png       # Training curves
 ```
-
-**Expected Performance**:
-- ✅ Accuracy: **95%+**
-- ✅ F1-Score: **93-96%**
-- ✅ ROC-AUC: **0.97-0.99**
 
 ---
 
@@ -190,7 +184,6 @@ training:
 
 - **README.md** - Full project overview
 - **SETUP_GUIDE.md** - Detailed installation
-- **STATUS.md** - Implementation status
 - **config.yaml** - Configuration reference
 
 ---
@@ -213,7 +206,6 @@ Your malicious domain detection system is ready to use. Start with the test conf
 **Questions?** Check the detailed guides:
 - Installation issues → `SETUP_GUIDE.md`
 - Project details → `README.md`
-- Status & architecture → `STATUS.md`
 
 **Happy Training! 🚀**
 

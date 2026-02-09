@@ -1,0 +1,132 @@
+data:
+  # Path to Zenodo dataset
+  data_dir: "Zenodo"
+  phishing_file: "phishing.json"
+  malware_file: "malware.json"
+  benign_umbrella_file: "benign_umbrella.json"
+  benign_cesnet_file: "benign_cesnet.json"
+  
+  # Data split ratios
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  
+  # Sampling strategy (smaller for testing)
+  sample_size: 100000  # 100K samples for quick test
+  samples_per_class:
+    benign: 50000
+    phishing: 30000
+    malware: 20000
+  
+  # Class balance strategy: "undersample", "weighted", or "oversample"
+  class_balance: "weighted"
+  
+  # Random seed for reproducibility
+  random_seed: 42
+
+feature_engineering:
+  # Maximum sequence length for domain name features
+  max_domain_length: 100
+  
+  # Feature categories to extract
+  extract_domain_features: true
+  extract_dns_record_counts: true
+  extract_ip_features: true
+  extract_ttl_features: true
+  extract_dnssec_features: true
+  extract_ns_mx_features: true
+
+model:
+  # Model architecture
+  architecture: "cnn_lstm"
+  
+  # Input layer
+  input_dim: null  # Will be set automatically based on features
+  
+  # Dense embedding layer
+  embedding_dim: 128  # Reduced for faster training
+  
+  # CNN layers
+  conv_filters: [64, 32]  # Reduced for faster training
+  conv_kernel_size: 3
+  pool_size: 2
+  
+  # LSTM layer
+  lstm_units: 64  # Reduced for faster training
+  bidirectional: true
+  
+  # Attention mechanism
+  use_attention: true
+  attention_units: 32
+  
+  # Dense layers
+  dense_units: [64, 32]  # Reduced for faster training
+  
+  # Dropout rates
+  dropout_rate: 0.3
+  dropout_rate_final: 0.2
+  
+  # Batch normalization
+  use_batch_norm: true
+  
+  # Output
+  num_classes: 3  # benign, phishing, malware
+
+training:
+  # Training parameters
+  batch_size: 256  # Smaller batch for testing
+  epochs: 50
+  
+  # Optimizer
+  optimizer: "adam"
+  learning_rate: 0.001
+  
+  # Learning rate scheduling
+  use_lr_scheduler: true
+  lr_factor: 0.5
+  lr_patience: 3
+  lr_min: 0.00001
+  
+  # Early stopping
+  early_stopping: true
+  early_stopping_patience: 5
+  early_stopping_monitor: "val_f1_score"
+  early_stopping_mode: "max"
+  
+  # Class weights (will be calculated if class_balance is "weighted")
+  use_class_weights: true
+  
+  # Checkpoint settings
+  save_best_only: true
+  checkpoint_monitor: "val_f1_score"
+  checkpoint_mode: "max"
+
+evaluation:
+  # Metrics to compute
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1_score
+    - auc
+  
+  # Visualization
+  plot_confusion_matrix: true
+  plot_roc_curves: true
+  plot_training_history: true
+  
+  # Report settings
+  save_classification_report: true
+  save_predictions: true
+
+paths:
+  # Output directories
+  logs_dir: "logs"
+  saved_models_dir: "saved_models"
+  results_dir: "results"
+  tensorboard_dir: "logs/tensorboard"
+  
+  # Output files
+  processed_data_dir: "processed_data"
+  feature_scaler_path: "processed_data/scaler.pkl"
+  label_encoder_path: "processed_data/label_encoder.pkl"

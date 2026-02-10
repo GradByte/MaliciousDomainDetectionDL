@@ -2,6 +2,10 @@
 Zenodo/
 *.json
 
+# Exception: Keep example images in docs
+!docs/**/*.png
+!docs/**/*.jpg
+
 # Trained Models and Results
 saved_models/
 results/

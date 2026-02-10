@@ -151,6 +151,43 @@ The model is designed to achieve high accuracy through:
 - Hybrid CNN-LSTM architecture with attention
 - Comprehensive training on large-scale dataset
 
+### Example Results
+
+Results from training on 100K samples (test configuration):
+
+| Metric | Score |
+|--------|-------|
+| **Accuracy** | 76.96% |
+| **F1-Score (Macro)** | 76.24% |
+| **ROC-AUC (Macro)** | 92.06% |
+
+**Per-Class Performance:**
+- **Benign**: Precision: 87.5%, Recall: 76.8%, F1: 81.8%
+- **Phishing**: Precision: 84.1%, Recall: 74.7%, F1: 79.1%
+- **Malware**: Precision: 58.4%, Recall: 80.7%, F1: 67.8%
+
+### Visualizations
+
+**Class Distribution:**
+
+![Class Distribution](docs/images/train_class_distribution.png)
+
+**Confusion Matrix:**
+
+![Confusion Matrix](docs/images/confusion_matrix.png)
+
+**ROC Curves:**
+
+![ROC Curves](docs/images/roc_curves.png)
+
+**Training History:**
+
+![Training History](docs/images/training_history.png)
+
+**Loss and Accuracy:**
+
+![Loss and Accuracy](docs/images/loss_accuracy.png)
+
 ## Results
 
 After training, results are saved to `results/experiment_TIMESTAMP/`:

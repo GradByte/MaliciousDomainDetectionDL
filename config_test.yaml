@@ -89,7 +89,7 @@ training:
   
   # Early stopping
   early_stopping: true
-  early_stopping_patience: 5
+  early_stopping_patience: 20
   early_stopping_monitor: "val_f1_score"
   early_stopping_mode: "max"
   

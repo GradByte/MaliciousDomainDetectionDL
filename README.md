@@ -46,6 +46,7 @@ dnsProject/
 │   └── benign_cesnet.json
 ├── train.py                    # Main training script
 ├── predict.py                  # Inference script
+├── check_domain.py             # Simple domain checker (fetches DNS + predicts)
 ├── config.yaml                 # Hyperparameters and settings
 └── requirements.txt            # Python dependencies
 ```
@@ -110,7 +111,43 @@ training:
 
 ### Prediction
 
-Predict on new domains from a JSON file:
+#### Quick Check: Single Domain
+
+The easiest way to check if a domain is malicious:
+
+```bash
+python check_domain.py example.com
+```
+
+This will automatically fetch DNS records and classify the domain. Example output:
+```
+🔍 Checking domain: example.com
+============================================================
+📡 Fetching DNS records...
+✓ DNS records fetched
+🤖 Loading model and predicting...
+
+============================================================
+📊 PREDICTION RESULTS
+============================================================
+Domain: example.com
+
+🎯 Prediction: BENIGN
+   Confidence: 95.32%
+
+📈 Probabilities:
+   benign    : 95.32% ████████████████████████████████████████████████
+   phishing  :  3.21% █
+   malware   :  1.47% 
+
+============================================================
+✅ This domain appears to be SAFE
+============================================================
+```
+
+#### Batch Prediction
+
+Predict on multiple domains from a JSON file:
 ```bash
 python predict.py --input domains.json --output predictions.json
 ```

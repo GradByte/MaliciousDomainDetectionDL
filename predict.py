@@ -46,44 +46,69 @@ class DomainClassifier:
         print(f"✓ Using device: {self.device}")
         
         # Load checkpoint
-        checkpoint = torch.load(model_path, map_location=self.device)
+        # weights_only=False is safe here since this is our own trained model
+        checkpoint = torch.load(model_path, map_location=self.device, weights_only=False)
         
         # Load preprocessor first to get model config
         self.preprocessor = DNSDataPreprocessor()
         self.preprocessor.load(scaler_path, encoder_path)
         print(f"✓ Preprocessor loaded")
         
-        # Get model configuration from checkpoint
-        if 'config' in checkpoint:
-            model_config = checkpoint['config'].get('model', {})
-        else:
-            # Use default config if not found
-            model_config = {}
+        # Extract model architecture from checkpoint's state_dict
+        state_dict = checkpoint.get('model_state_dict', checkpoint)
         
-        # Determine input dimension from checkpoint
-        if 'model_state_dict' in checkpoint:
-            state_dict = checkpoint['model_state_dict']
-            # Find embedding layer weight to determine input dim
-            for key in state_dict.keys():
-                if 'embedding.weight' in key:
-                    input_dim = state_dict[key].shape[1]
-                    break
-            else:
-                # Default fallback
-                input_dim = 50
-        else:
-            input_dim = 50
+        # Determine architecture parameters from saved weights
+        input_dim = state_dict['embedding.weight'].shape[1]
+        embedding_dim = state_dict['embedding.weight'].shape[0]
+        
+        # Extract conv filter sizes
+        conv_filters = []
+        for key in state_dict.keys():
+            if 'conv_layers' in key and 'weight' in key:
+                conv_filters.append(state_dict[key].shape[0])
+        
+        # Extract LSTM units (hidden size)
+        lstm_hidden = state_dict['lstm.weight_hh_l0'].shape[1]
+        
+        # Extract attention units
+        attention_units = state_dict['attention.W.bias'].shape[0]
+        
+        # Extract dense layer sizes
+        dense_units = []
+        for key in sorted(state_dict.keys()):
+            if 'dense_layers' in key and 'weight' in key:
+                dense_units.append(state_dict[key].shape[0])
+        
+        # Build model config from extracted parameters
+        model_config = {
+            'embedding_dim': embedding_dim,
+            'conv_filters': conv_filters,
+            'conv_kernel_size': 3,  # Default
+            'pool_size': 2,  # Default
+            'lstm_units': lstm_hidden,
+            'bidirectional': True,
+            'use_attention': True,
+            'attention_units': attention_units,
+            'dense_units': dense_units,
+            'dropout_rate': 0.3,  # Default (not critical for inference)
+            'dropout_rate_final': 0.2,  # Default (not critical for inference)
+            'use_batch_norm': True
+        }
+        
+        print(f"✓ Model architecture extracted from checkpoint:")
+        print(f"  - Input dim: {input_dim}")
+        print(f"  - Embedding dim: {embedding_dim}")
+        print(f"  - Conv filters: {conv_filters}")
+        print(f"  - LSTM units: {lstm_hidden}")
+        print(f"  - Attention units: {attention_units}")
+        print(f"  - Dense units: {dense_units}")
         
         # Build model
         num_classes = self.preprocessor.get_num_classes()
         self.model = build_cnn_lstm_model(input_dim, num_classes, model_config)
         
         # Load state dict
-        if 'model_state_dict' in checkpoint:
-            self.model.load_state_dict(checkpoint['model_state_dict'])
-        else:
-            # Assume checkpoint is the state dict itself
-            self.model.load_state_dict(checkpoint)
+        self.model.load_state_dict(state_dict)
         
         self.model.to(self.device)
         self.model.eval()

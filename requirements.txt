@@ -23,6 +23,9 @@ tqdm>=4.65.0
 # Metrics and Evaluation
 scipy>=1.10.0
 
+# DNS lookups (for check_domain.py)
+dnspython>=2.3.0
+
 # Optional but recommended for GPU
 # Install CUDA-compatible PyTorch from: https://pytorch.org/get-started/locally/
 # Example: pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu118
